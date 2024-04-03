@@ -1,0 +1,10 @@
+{
+    "main_guild"    : 848294702994292797,
+    "main_channel"  : 923230894913904650,
+    "main_message"  : 1224863157261041705,
+    "logging_thread": 1223294878440493096,
+    "alerts_thread" : 1223631958953689160,
+    "notify_ping"   : 856889574638616587,
+    "deny_role"     : 1224166984766328874,
+    "database_name" : "SystemTrackerV2"
+}
