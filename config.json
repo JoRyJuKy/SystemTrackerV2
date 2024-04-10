@@ -1,15 +1,11 @@
 {
-    "main_guild"    : 848294702994292797,
-    "main_channel"  : 923230894913904650,
-
-    "help_message"  : 1227687409739763733,
-    "main_message"  : 1227687410691997747,
-
+    "main_guild": 848294702994292797,
+    "main_channel": 923230894913904650,
+    "help_message": 1227734255115698227,
+    "main_message": 1227734255942107186,
     "logging_thread": 1223294878440493096,
-    "alerts_thread" : 1223631958953689160,
-
-    "notify_role"   : 856889574638616587,
-    "deny_role"     : 1224166984766328874,
-    
-    "database_name" : "SystemTrackerV2"
+    "alerts_thread": 1223631958953689160,
+    "notify_role": 856889574638616587,
+    "deny_role": 1224166984766328874,
+    "database_name": "SystemTrackerV2"
 }
