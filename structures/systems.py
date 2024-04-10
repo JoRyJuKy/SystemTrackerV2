@@ -40,7 +40,7 @@ class System():
     def get_system_data(self) -> str:
         """Gets string containing information about system"""
         #NOTE: 
-        return f"{':fish:' if self.owner == 'Foralkan' else ':bricks:'} {self.name} [{self.get_tier()}]"
+        return f"{':Foralkus:' if self.owner == 'Foralkan' else ':Lycentia:'} {self.name} [{self.get_tier()}]"
     
     def get_capture_data(self) -> str:
         """Gets string containing information about capturability"""
