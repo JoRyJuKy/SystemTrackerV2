@@ -181,7 +181,8 @@ class TimerManager(BaseManager):
 
         #if there are no timers, note that in the embed, and exit early
         if not self._systems:
-            embed.description = "There are currently no timers set!\nYou can set one with </timer:1224527131590004788>"
+            timer_id = self.bot.interactions_by_scope[0]["timer"].cmd_id[0]
+            embed.description = f"There are currently no timers set!\nYou can set one with </timer:{timer_id}>"
             await message.edit(embeds=[embed, *other_embeds])
             return
         

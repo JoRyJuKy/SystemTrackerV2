@@ -54,7 +54,7 @@ class Logger():
             custom_id="button_capture_system"
         )
         await self.log(
-            text=f"`{capturable.name}` is now capturable <@&{self.bot.config['notify_ping']}>", 
+            text=f"`{capturable.name}` is now capturable <@&{self.bot.config['notify_role']}>", 
             embeds=[embed], thread=WhichThread.Alerts, components=[button]
         )
 

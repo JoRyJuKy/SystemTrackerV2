@@ -1,7 +1,8 @@
+import re
 import os, json, time, asyncio
 import dotenv; dotenv.load_dotenv()
 import motor.motor_asyncio
-from interactions import Client, Intents, IntervalTrigger, SlashContext, Task, listen
+from interactions import Client, Intents, IntervalTrigger, SlashCommand, SlashContext, Task, listen
 
 from structures.systems import CapturableManager, TimerManager
 from structures.logger  import Logger
@@ -42,6 +43,29 @@ async def on_ready():
     #update the messages initially
     await bot.timers.update_message()
     await bot.capturables.update_message()
+
+    #update the help message:
+    #first, get a list of all the commands in the bot
+    all_commands = []
+    for commands in bot.interactions_by_scope.values():
+        for name, cmd in commands.items():
+            if isinstance(cmd, SlashCommand): all_commands.append(name)
+
+    #then fetch the help message and embed
+    help_message = await (await bot.fetch_channel(bot.config["main_channel"])).fetch_message(bot.config["help_message"]) #type:ignore
+    help_embed = help_message.embeds[0] #type:ignore
+    commands_content = help_embed.fields[0].value
+    
+    #then replace all the unfinished commands with their actual ids
+    for command in all_commands:
+        command_id = bot.interaction_tree[0][command].cmd_id[0] #type:ignore
+        commands_content = re.sub(f"</{command}:0>", f"</{command}:{command_id}>", commands_content)
+    
+    help_embed.fields[0].value = commands_content
+    await help_message.edit(embeds=help_embed) #type:ignore
+    
+
+    
 
     print("Bot started!")
 

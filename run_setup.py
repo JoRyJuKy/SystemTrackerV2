@@ -18,9 +18,9 @@ notif_thread = 1223631958953689160
 role_get_channel = 1221830865928323092
 logs_thread = 1223294878440493096
 
-timer_id = 1224527131590004788
-capturable_id = 1224032097543520288
-capture_id = 1223635930179567748
+timer_id = 0
+capturable_id = 0
+capture_id = 0
 
 description = f"""Welcome to the Kavani Mandate SystemTracker v2!
 This bot helps track timers and capturable systems for faction warfare.
@@ -28,9 +28,9 @@ This bot helps track timers and capturable systems for faction warfare.
     - You can get the role from <#{role_get_channel}>
 - Timers & capturable systems can be found below, and all actions are logged in <#{logs_thread}>
 - Contact a moderator to report any errors or abuse"""
-cmd_description = f"""- </timer:{timer_id}> - Adds a system timer to the bot
-- </capturable:{capturable_id}> - Adds a capturable system to the bot
-- </capture:{capture_id}> - Marks a capturable system as captured
+cmd_description = f"""- </timer:0> - Adds a system timer to the bot
+- </capturable:0> - Adds a capturable system to the bot
+- </capture:0> - Marks a capturable system as captured
     - You can also use the buttons in <#{notif_thread}> for this!
 Try each command for further help and a more detailed description!
 """
@@ -48,7 +48,7 @@ async def on_ready():
     embed = Embed(title="Setup...")
     await channel.send(embed=embed) #type:ignore
 
-    print("Setup finished! Make sure to update config.json with new IDs.")
+    print("Setup finished! Make sure to update config.json with new message IDs.")
+    print("In particular, the `help_` and `main_message` will need changing.")
     await bot.stop()
-
 bot.start(os.getenv("DISCORD_TOKEN"))
