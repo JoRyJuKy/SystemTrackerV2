@@ -47,14 +47,21 @@ class Capture(Extension):
     @component_callback("button_capture_system")
     async def capture_button_pressed(self, ctx: ComponentContext):
         msg = ctx.message
-        if not msg: return
+        if not msg: 
+            print("capture.py: Could not find message on button press")
+            return
 
         #get the system from the id with some regex
         embed_desc = msg.embeds[0].description
-        if not embed_desc: return
+        if not embed_desc:
+            print("capture.py: Could not get description from first embed:")
+            print(msg.embeds[0])
+            return
 
         match = system_name_pattern.search(embed_desc)
-        if not match: return
+        if not match:
+            print("capture.py: Regex did not produce any matches for system name")
+            return
         system = match.group(1)
 
         await msg.delete()
