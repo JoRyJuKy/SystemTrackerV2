@@ -10,7 +10,7 @@ from interactions import (
 from misc.system_autocomplete import get_system_autocomplete
 from misc.colors import ERROR_COLOR, KAVANI_COLOR
 
-system_name_pattern = re.compile(r": ([a-zA-Z0-9'\- ]+) \[")
+system_name_pattern = re.compile(r"[>:] ([a-zA-Z0-9'\- ]+) \[")
 
 class Capture(Extension):
     async def capture(self, ctx: Union[SlashContext, ComponentContext], system: str, handle_deletion: bool):
@@ -47,21 +47,14 @@ class Capture(Extension):
     @component_callback("button_capture_system")
     async def capture_button_pressed(self, ctx: ComponentContext):
         msg = ctx.message
-        if not msg: 
-            print("capture.py: Could not find message on button press")
-            return
+        if not msg: return
 
         #get the system from the id with some regex
         embed_desc = msg.embeds[0].description
-        if not embed_desc:
-            print("capture.py: Could not get description from first embed:")
-            print(msg.embeds[0])
-            return
+        if not embed_desc: return
 
         match = system_name_pattern.search(embed_desc)
-        if not match:
-            print("capture.py: Regex did not produce any matches for system name")
-            return
+        if not match: return
         system = match.group(1)
 
         await msg.delete()
