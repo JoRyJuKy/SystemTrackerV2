@@ -1,5 +1,5 @@
-import asyncio
 from typing import Optional
+from dataclasses import dataclass
 from motor.motor_asyncio import AsyncIOMotorCollection
 from interactions import Embed, Guild, GuildText, Message, Client
 from interactions.client.utils import bold
@@ -7,9 +7,12 @@ from interactions.client.utils import bold
 from misc.colors import KAVANI_COLOR
 
 
-Timestamp = int #for more clear type hinting
-UserId = int
+#for more clear type hinting
+Timestamp = int
+UserId    = int
+MessageId = int
 
+@dataclass
 class System():
     """
     Represents a Contested system, and data about its addition to the DB
@@ -20,13 +23,7 @@ class System():
     capturable: Timestamp
     added: Timestamp
     added_by: UserId
-    def __init__(self, name: str, owner: str, tier: int, capturable: Timestamp, added: Timestamp, added_by: UserId) -> None:
-        self.name = name
-        self.owner = owner
-        self.tier = tier
-        self.capturable = capturable
-        self.added = added
-        self.added_by = added_by
+    message_id: Optional[MessageId]
 
     def get_tier(self) -> str:
         """Gets the string version of this system's tier"""
@@ -39,8 +36,8 @@ class System():
     
     def get_system_data(self) -> str:
         """Gets string containing information about system"""
-        #NOTE: 
-        return f"{':Foralkus:' if self.owner == 'Foralkan' else ':Lycentia:'} {self.name} [{self.get_tier()}]"
+        emoji = '<:Foralkus:1227736614432936057>' if self.owner == 'Foralkan' else '<:Lycentia:1222626949457772695>'
+        return f"{emoji} {self.name} [{self.get_tier()}]"
     
     def get_capture_data(self) -> str:
         """Gets string containing information about capturability"""

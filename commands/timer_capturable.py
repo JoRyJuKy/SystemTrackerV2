@@ -111,7 +111,7 @@ class TimerAndCapturable(Extension):
         currrent_timestamp = int(time.time())
         capturable_timestamp = currrent_timestamp + secs_until
 
-        entry = System(system, owner, tier, capturable_timestamp, currrent_timestamp, ctx.user.id)
+        entry = System(system, owner, tier, capturable_timestamp, currrent_timestamp, ctx.user.id, None)
 
         #send a confirmation message
         conf_embed = Embed(
@@ -153,9 +153,9 @@ class TimerAndCapturable(Extension):
         )
         await ctx.edit(embeds=success_embed, components=[])
 
-        await (self.bot.timers if is_timer else self.bot.capturables).add(entry)
         if not is_timer:
-            await self.bot.logging.log_capturable(entry)
+            entry.message_id = await self.bot.logging.log_capturable(entry)
+        await (self.bot.timers if is_timer else self.bot.capturables).add(entry)
         
 
     @timer.autocomplete("system")

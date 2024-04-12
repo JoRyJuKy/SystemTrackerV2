@@ -1,10 +1,9 @@
-import asyncio
 import enum
 from typing import Optional
 from interactions import BaseComponent, Button, ButtonStyle, Client, Embed, GuildText, Message, ThreadChannel
 
 from misc.colors import KAVANI_COLOR
-from structures.systems import System, UserId
+from structures.systems import MessageId, System, UserId
 
 class WhichThread(enum.Enum):
     Logs = 1
@@ -44,7 +43,7 @@ class Logger():
         send_thread = self._logs_thread if thread == WhichThread.Logs else self._alerts_thread
         return await send_thread.send(content=text, embeds=embeds, components=components)
 
-    async def log_capturable(self, capturable: System):
+    async def log_capturable(self, capturable: System) -> MessageId:
         embed = Embed(
             title="System capturable:", color=KAVANI_COLOR,
             description=f"**{capturable.get_system_data()}** can be captured!"
@@ -53,10 +52,11 @@ class Logger():
             label="Mark as Captured", style=ButtonStyle.SUCCESS,
             custom_id="button_capture_system"
         )
-        await self.log(
+        log_msg = await self.log(
             text=f"`{capturable.name}` is now capturable <@&{self.bot.config['notify_role']}>", 
             embeds=[embed], thread=WhichThread.Alerts, components=[button]
         )
+        return log_msg.id
 
     async def log_capture(self, capture: System, by: UserId):
         embed = Embed(

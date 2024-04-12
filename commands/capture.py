@@ -3,7 +3,7 @@ from typing import Union
 from interactions import (
     Extension,
     SlashContext, AutocompleteContext, ComponentContext,
-    Button, Embed, OptionType, Buckets,
+    Embed, OptionType, Buckets,
     component_callback, cooldown, slash_command, slash_option
 )
 
@@ -13,7 +13,7 @@ from misc.colors import ERROR_COLOR, KAVANI_COLOR
 system_name_pattern = re.compile(r": ([a-zA-Z0-9'\- ]+) \[")
 
 class Capture(Extension):
-    async def capture(self, ctx: Union[SlashContext, ComponentContext], system: str):
+    async def capture(self, ctx: Union[SlashContext, ComponentContext], system: str, handle_deletion: bool):
         #make sure system is marked as capturable
         if not self.bot.capturables.has(system):
             embed = Embed(
@@ -26,6 +26,17 @@ class Capture(Extension):
         entry = self.bot.capturables.get(system)
         await self.bot.capturables.remove(system)
 
+        if handle_deletion:
+            #delete the alert message
+            channel = await self.bot.fetch_channel(self.bot.config["main_channel"])
+            thread = [
+                t for t in (await channel.fetch_all_threads()).threads 
+                if t.id == self.bot.config["alerts_thread"]
+            ][0]
+            msg = await thread.fetch_message(entry.message_id)
+            if msg: await msg.delete()
+        
+        #send the success message
         embed = Embed(
             title="Success", color=KAVANI_COLOR,
             description=f"{entry.get_system_data()} was marked as captured!"
@@ -35,23 +46,19 @@ class Capture(Extension):
 
     @component_callback("button_capture_system")
     async def capture_button_pressed(self, ctx: ComponentContext):
-        #get the system from the id with some regex
         msg = ctx.message
         if not msg: return
+
+        #get the system from the id with some regex
         embed_desc = msg.embeds[0].description
         if not embed_desc: return
+
         match = system_name_pattern.search(embed_desc)
         if not match: return
         system = match.group(1)
 
-        await self.capture(ctx, system)
-
-        #make the button appear as disabled by editing the original message
-        disabled_button = ctx.component
-        if not isinstance(disabled_button, Button): return
-        disabled_button.disabled = True
-        await msg.edit(content=msg.content, embeds=msg.embeds, components=[disabled_button])
-
+        await msg.delete()
+        await self.capture(ctx, system, False)
 
     @slash_command(
         name="capture",
@@ -73,7 +80,7 @@ class Capture(Extension):
             )
             await ctx.send(embeds=embed, ephemeral=True)
             return
-        await self.capture(ctx, system)
+        await self.capture(ctx, system, True)
     
     @capture_command.autocomplete("system")
     async def system_autocomplete(self, ctx: AutocompleteContext):
