@@ -64,9 +64,6 @@ async def on_ready():
     help_embed.fields[0].value = commands_content
     await help_message.edit(embeds=help_embed) #type:ignore
     
-
-    
-
     print("Bot started!")
 
 async def main():
@@ -80,7 +77,6 @@ async def main():
     bot.load_extension("misc.handle_errors")
     bot.load_extension("misc.delete_messages")
 
-
     #globally add a check for role denylist
     async def check(ctx: SlashContext) -> bool:
         return not ctx.member.has_role(bot.config["deny_role"])#type:ignore
@@ -92,5 +88,6 @@ async def main():
     await bot.astart(os.getenv("DISCORD_TOKEN"))
 
 #run main
-asyncio.run(main())
+if __name__ == "__main__":
+    asyncio.run(main())
 

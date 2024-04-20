@@ -1,9 +1,10 @@
 import enum
+import time
 from typing import Optional
 from interactions import BaseComponent, Button, ButtonStyle, Client, Embed, GuildText, Message, ThreadChannel
 
 from misc.colors import KAVANI_COLOR
-from structures.systems import MessageId, System, UserId
+from structures.systems import MessageId, System, Timestamp, UserId
 
 class WhichThread(enum.Enum):
     Logs = 1
@@ -14,6 +15,7 @@ class Logger():
     Used for logging to a logging thread.
     """
     bot: Client
+    last_pinged: Timestamp
     _logs_thread: ThreadChannel
     _alerts_thread: ThreadChannel
 
@@ -21,6 +23,7 @@ class Logger():
     async def new(cls, bot: Client):
         self = cls()
         self.bot = bot
+        self.last_pinged = 0
 
         channel = await self.bot.fetch_channel(self.bot.config["main_channel"])
         if not isinstance(channel, GuildText): raise TypeError("Wrong channel type for logger!")
@@ -52,9 +55,17 @@ class Logger():
             label="Mark as Captured", style=ButtonStyle.SUCCESS,
             custom_id="button_capture_system"
         )
+        
+        #make sure pinging doesn't happen too often
+        log_text = f"`{capturable.name}` is now capturable"
+        current_time = round(time.time())
+        if abs(current_time - self.last_pinged) >= 60:
+            log_text = log_text + f" <@&{self.bot.config['notify_role']}>"
+            self.last_pinged = current_time
+
         log_msg = await self.log(
-            text=f"`{capturable.name}` is now capturable <@&{self.bot.config['notify_role']}>", 
-            embeds=[embed], thread=WhichThread.Alerts, components=[button]
+            text=log_text, embeds=[embed],
+            thread=WhichThread.Alerts, components=[button]
         )
         return log_msg.id
 
