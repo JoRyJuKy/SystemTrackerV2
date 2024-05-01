@@ -134,7 +134,6 @@ def _detect(url) -> Optional[tuple[Result, io.BytesIO]]:
         #determine the system name by:
         #   1. Picking out the highest text region found (which is why we sorted)
         #   2. Choosing the closest match out of the Systems list
-        print(results[0][1])
         name = pick_closest(results[0][1].split("[")[0].strip(), systems)[0]
         #END SECTION: Getting the system name
 
@@ -172,9 +171,7 @@ def _detect(url) -> Optional[tuple[Result, io.BytesIO]]:
 
             #match out the timestamp string, returning early if it couldn't be found
             match = re.search(r"(?:\d:)?\d{1,2}:\d{1,2}", capturable_line)
-            if not match: 
-                print(capturable_line)
-                return None
+            if not match: return None
 
             #get the match string, adding a "0:" to the start if it's in mm:ss to make further processing simpler
             time_str = match.group(0)
@@ -205,7 +202,7 @@ def init_executor():
     import json
     global reader, systems
     #initialize the ocr reader
-    reader = Reader(["en"], gpu=True, verbose=False)
+    reader = Reader(["en"], gpu=False, verbose=False)
 
     #initialize the systems
     #ik we already do this in the main.py for the bot, but it seemed inneficient to pass the entire systems array into the subprocess
