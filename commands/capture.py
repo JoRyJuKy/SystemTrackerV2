@@ -64,7 +64,7 @@ class Capture(Extension):
         name="capture",
         description="Marks a system as captured."
     )
-    @cooldown(Buckets.USER, 1, 30)
+    # @cooldown(Buckets.USER, 1, 30)
     @slash_option(
         name="system",
         description="Name of the system. Must be one of the supplied options:",
