@@ -10,7 +10,7 @@ class DeleteMessages(Extension):
         #don't delete command stuffs
         if message.interaction: return
         #dont delete me :( 
-        if message.author.id == 799064502716203018: return
+        if message.author.id == self.bot.owner.id: return
 
         #ok its fine to delete now
         if message.channel.id == self.bot.config["main_channel"]:

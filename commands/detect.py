@@ -32,7 +32,7 @@ class Detect(Extension):
         if screenshot.content_type not in ["image/bmp", "image/jpeg", "image/jpg", "image/png"]:
             embed = Embed(
                 title="Error", color=ERROR_COLOR,
-                description="That screenshot's file type is not supported.\nPlease contact <@!799064502716203018> if you think it should be.",
+                description=f"That screenshot's file type is not supported.\nPlease contact <@!{self.bot.owner.id}> if you think it should be.",
                 footer=EmbedFooter(f"File type: {screenshot.content_type}")
             )
             await ctx.send(embeds=embed, ephemeral=True)
